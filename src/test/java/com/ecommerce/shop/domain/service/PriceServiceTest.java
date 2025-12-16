@@ -1,0 +1,66 @@
+package com.ecommerce.shop.domain.service;
+
+import com.ecommerce.shop.domain.exception.PriceNotFoundException;
+import com.ecommerce.shop.domain.model.Price;
+import com.ecommerce.shop.domain.port.PricePersistencePort;
+import com.ecommerce.shop.domain.utils.DateUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class PriceServiceTest {
+
+	private static final String APPLICATION_DATE = DateUtils.localDateTimeToString(LocalDateTime.now());
+
+	private static final Integer PRODUCT_ID = 35455;
+
+	private static final Integer BRAND_ID = 1;
+
+	@Mock
+	private PricePersistencePort pricePersistenceAdapter;
+
+	@InjectMocks
+	private PriceService priceService;
+
+	@Test
+	void givenValidParametersWheGetPriceThenOk() {
+		when(this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID)).thenReturn(this.getPrices());
+
+		final Price price = this.priceService.getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID);
+
+		verify(this.pricePersistenceAdapter).getPriceByParameters(PRODUCT_ID, BRAND_ID);
+		assertNotNull(price);
+		assertEquals(1, price.getPriority());
+		assertEquals(2, price.getPriceList());
+	}
+
+	@Test
+	void givenValidParametersWhenGetPriceThenPriceNotFoundThenExceptionIsThrown() {
+		when(this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID)).thenReturn(List.of());
+
+		assertThrows(PriceNotFoundException.class, () -> this.priceService.getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID));
+
+		verify(this.pricePersistenceAdapter).getPriceByParameters(PRODUCT_ID, BRAND_ID);
+	}
+
+	private List<Price> getPrices() {
+
+		final LocalDateTime startDate = LocalDateTime.now().minusDays(2);
+		final LocalDateTime endDate = LocalDateTime.now().plusDays(2);
+		return List.of(
+				Price.builder().id(1L).productId(PRODUCT_ID).brandId(BRAND_ID).priority(1).priceList(2).startDate(startDate).endDate(endDate).build(),
+				Price.builder().id(2L).productId(PRODUCT_ID).brandId(BRAND_ID).priority(0).priceList(5).startDate(startDate).endDate(endDate).build()
+		);
+	}
+
+}
