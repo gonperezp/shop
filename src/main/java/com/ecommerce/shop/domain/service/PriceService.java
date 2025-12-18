@@ -8,7 +8,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Comparator;
 
 import static com.ecommerce.shop.domain.constant.ErrorMessages.NOT_FOUND;
 
@@ -21,12 +21,10 @@ public class PriceService {
 
 	public Price getPrice(final String applicationDate, final Integer productId, final Integer brandId) {
 
-		final List<Price> priceList = this.pricePersistenceAdapter.getPriceByParameters(productId, brandId, DateUtils.stringToLocalDateTime(applicationDate));
-
-		if (priceList.isEmpty()) {
-			throw new PriceNotFoundException(NOT_FOUND);
-		}
-		return priceList.getFirst();
+		return this.pricePersistenceAdapter.getPriceByParameters(productId, brandId, DateUtils.stringToLocalDateTime(applicationDate))
+				.stream()
+				.max(Comparator.comparingInt(Price::getPriority))
+				.orElseThrow(()-> new PriceNotFoundException(NOT_FOUND));
 	}
 
 }

@@ -15,7 +15,6 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
         WHERE p.productId = :productId
           AND p.brandId = :brandId
           AND :applicationDate BETWEEN p.startDate AND p.endDate
-        ORDER BY p.priority DESC
     """)
 	List<Price> findByProductIdAndBrandId(final Integer productId, final Integer brandId, final LocalDateTime applicationDate);
 

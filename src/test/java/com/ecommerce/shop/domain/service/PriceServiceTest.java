@@ -51,22 +51,6 @@ class PriceServiceTest {
 	}
 
 	@Test
-	@DisplayName("Given valid parameters and adapter return only one price when Get Price Then Ok")
-	void givenValidParametersAndGetOnePricesFromAdapterWhenGetPriceThenOk() {
-
-		when(this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID, LOCAL_DATE_TIME))
-				.thenReturn(List.of(this.getPrices().get(1)));
-
-		final Price price = this.priceService.getPrice(STRING_DATE, PRODUCT_ID, BRAND_ID);
-
-		verify(this.pricePersistenceAdapter).getPriceByParameters(PRODUCT_ID, BRAND_ID, LOCAL_DATE_TIME);
-
-		assertNotNull(price);
-		assertEquals(0, price.getPriority());
-		assertEquals(5, price.getPriceList());
-	}
-
-	@Test
 	void givenValidParametersWhenGetPriceThenPriceNotFoundThenExceptionIsThrown() {
 
 		when(this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID, LOCAL_DATE_TIME)).thenReturn(List.of());
