@@ -6,10 +6,6 @@ public class ErrorMessages {
 
 	public static final String REQUIRED = "Missing required parameter";
 
-	public static final String INVALID_REGEX = "Invalid regex format";
-
-	public static final String INVALID_DATETIME = "Invalid localDateTime format";
-
 	public static final String INVALID_TYPE = "Invalid field type";
 
 	public static final String INTERNAL_ERROR = "Internal Server Error";

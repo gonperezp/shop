@@ -24,6 +24,8 @@ class PricePersistenceAdapterTest {
 
 	private static final Integer BRAND_ID = 1;
 
+	private static final  LocalDateTime DATE_NOW = LocalDateTime.now();
+
 	private static final  LocalDateTime START_DATE = LocalDateTime.now().minusDays(2);
 
 	private static final  LocalDateTime END_DATE = LocalDateTime.now().plusDays(2);
@@ -43,14 +45,14 @@ class PricePersistenceAdapterTest {
 		List<com.ecommerce.shop.infrastructure.database.entity.Price> entityPriceList = getEntityPrices();
 		List<Price> domainPriceList = getDomainPrices();
 
-		when(this.priceRepository.findByProductIdAndBrandId(PRODUCT_ID, BRAND_ID)).thenReturn(entityPriceList);
+		when(this.priceRepository.findByProductIdAndBrandId(PRODUCT_ID, BRAND_ID, DATE_NOW)).thenReturn(entityPriceList);
 		when(this.mapper.priceDTOListToPriceList(entityPriceList)).thenReturn(domainPriceList);
 
-		final List<Price> result = this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID);
+		final List<Price> result = this.pricePersistenceAdapter.getPriceByParameters(PRODUCT_ID, BRAND_ID, DATE_NOW);
 
 		assertNotNull(result);
 
-		verify(this.priceRepository).findByProductIdAndBrandId(PRODUCT_ID, BRAND_ID);
+		verify(this.priceRepository).findByProductIdAndBrandId(PRODUCT_ID, BRAND_ID, DATE_NOW);
 		verify(this.mapper).priceDTOListToPriceList(entityPriceList);
 
 	}

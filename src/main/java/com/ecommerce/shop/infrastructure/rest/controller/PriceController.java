@@ -1,9 +1,8 @@
-package com.ecommerce.shop.application.rest;
+package com.ecommerce.shop.infrastructure.rest.controller;
 
-import com.ecommerce.shop.application.rest.mapper.PriceMapper;
-import com.ecommerce.shop.domain.port.PriceServicePort;
+import com.ecommerce.shop.infrastructure.rest.mapper.PriceMapper;
+import com.ecommerce.shop.domain.port.GetPriceUseCase;
 
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.PriceApi;
@@ -14,19 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@Valid
 @RequiredArgsConstructor
 public class PriceController implements PriceApi {
 
 	@NonNull
-	private final PriceServicePort priceServicePort;
+	private final GetPriceUseCase getPriceUseCase;
 
 	@NonNull
 	private final PriceMapper mapper;
 
 	@Override
 	public ResponseEntity<PriceResponseDTO> getPrice(final String applicationDate, final Integer productId, final  Integer brandId) {
-		PriceResponseDTO response = this.mapper.priceToPriceResponseDTO(this.priceServicePort.getPrice(applicationDate, productId, brandId));
+		PriceResponseDTO response = this.mapper.priceToPriceResponseDTO(this.getPriceUseCase.getPrice(applicationDate, productId, brandId));
 		return ResponseEntity.ok(response);
 	}
 }

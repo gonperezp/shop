@@ -5,12 +5,11 @@ import com.ecommerce.shop.infrastructure.database.mapper.PricePersistenceMapper;
 import com.ecommerce.shop.infrastructure.database.repository.PriceRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PricePersistenceAdapter implements PricePersistencePort {
@@ -22,7 +21,7 @@ public class PricePersistenceAdapter implements PricePersistencePort {
 	private final PricePersistenceMapper mapper;
 
 	@Override
-	public List<com.ecommerce.shop.domain.model.Price> getPriceByParameters(final Integer productId, final Integer brandId) {
-		return this.mapper.priceDTOListToPriceList(this.priceRepository.findByProductIdAndBrandId(productId, brandId));
+	public List<com.ecommerce.shop.domain.model.Price> getPriceByParameters(final Integer productId, final Integer brandId, final LocalDateTime applicationDate) {
+		return this.mapper.priceDTOListToPriceList(this.priceRepository.findByProductIdAndBrandId(productId, brandId, applicationDate));
 	}
 }

@@ -1,4 +1,4 @@
-package com.ecommerce.shop.application.rest;
+package com.ecommerce.shop.infrastructure.rest.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -128,7 +128,7 @@ public class PriceControllerIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("404 NOT FOUND when productId = 35455, brandId = 1 and applicationDate = 2020-06-16 21:00:00")
+	@DisplayName("404 NOT FOUND when productId = 35455, brandId = 2 and applicationDate = 2020-06-16 21:00:00")
 	void givenValidParametersWhenNotFoundThenReturns404() throws Exception {
 
 		final String applicationDate = "2020-06-16 21:00:00";
@@ -158,6 +158,23 @@ public class PriceControllerIntegrationTest {
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.title").value(REQUIRED))
 				.andExpect(jsonPath("$.errorCode").value(REQUIRED_CODE));
+	}
+
+	@Test
+	@DisplayName("400 BAD REQUEST when productId = 35455, brandId = invalid and applicationDate = 2020-06-16 21:00:00")
+	void givenInValidTypeParameterThenReturns400() throws Exception {
+
+		final String applicationDate = "2020-06-16 21:00:00";
+
+		this.mockMvc.perform(
+						get(URL)
+								.param(APPLICATION_DATE_PARAM, applicationDate)
+								.param(PRODUCT_ID_PARAM, PRODUCT_ID_PARAM_VALUE)
+								.param(BRAND_ID_PARAM, "invalid")
+				)
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.title").value(INVALID_TYPE))
+				.andExpect(jsonPath("$.errorCode").value(INVALID_TYPE_CODE));
 	}
 
 }

@@ -1,19 +1,15 @@
-package com.ecommerce.shop.infrastructure.rest;
+package com.ecommerce.shop.infrastructure.rest.controller;
 
 
 import com.ecommerce.shop.domain.exception.PriceNotFoundException;
-import jakarta.validation.ConstraintViolationException;
 import org.openapitools.model.ErrorResponseDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import java.time.format.DateTimeParseException;
 
 import static com.ecommerce.shop.domain.constant.ErrorMessages.*;
 import static com.ecommerce.shop.domain.constant.ExternalErrorCode.*;
@@ -33,16 +29,6 @@ public class ErrorHandler {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<ErrorResponseDTO> handleMissingParameter(MissingServletRequestParameterException ex) {
 		return buildBadRequestError(REQUIRED, REQUIRED_CODE, ex.getMessage());
-	}
-
-	@ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
-	public ResponseEntity<ErrorResponseDTO> handleValidationExceptions(Exception ex) {
-		return buildBadRequestError(INVALID_REGEX, INVALID_REGEX_CODE, ex.getMessage());
-	}
-
-	@ExceptionHandler(DateTimeParseException.class)
-	public ResponseEntity<ErrorResponseDTO> handleDateTimeParse(DateTimeParseException ex) {
-		return buildBadRequestError(INVALID_DATETIME, INVALID_DATETIME_CODE, ex.getMessage());
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)

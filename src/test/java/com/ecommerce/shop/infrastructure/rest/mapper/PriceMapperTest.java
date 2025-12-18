@@ -1,4 +1,4 @@
-package com.ecommerce.shop.application.rest.mapper;
+package com.ecommerce.shop.infrastructure.rest.mapper;
 
 import com.ecommerce.shop.domain.model.Price;
 import com.ecommerce.shop.domain.utils.DateUtils;

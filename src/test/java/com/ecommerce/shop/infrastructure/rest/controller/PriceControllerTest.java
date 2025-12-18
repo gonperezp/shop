@@ -1,8 +1,8 @@
-package com.ecommerce.shop.application.rest;
+package com.ecommerce.shop.infrastructure.rest.controller;
 
-import com.ecommerce.shop.application.rest.mapper.PriceMapper;
+import com.ecommerce.shop.infrastructure.rest.mapper.PriceMapper;
 import com.ecommerce.shop.domain.model.Price;
-import com.ecommerce.shop.domain.port.PriceServicePort;
+import com.ecommerce.shop.domain.port.GetPriceUseCase;
 import com.ecommerce.shop.domain.utils.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class PriceControllerTest {
 	private static final  String END_DATE = DateUtils.localDateTimeToString(LocalDateTime.now().plusDays(2));
 
 	@Mock
-	private PriceServicePort priceServicePort;
+	private GetPriceUseCase getPriceUseCase;
 
 	@Mock
 	private PriceMapper mapper;
@@ -47,7 +47,7 @@ class PriceControllerTest {
 		final Price price = this.getPrice();
 		final PriceResponseDTO priceResponseDTO = getPriceResponseDTO();
 
-		when(this.priceServicePort.getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID)).thenReturn(price);
+		when(this.getPriceUseCase.getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID)).thenReturn(price);
 		when(this.mapper.priceToPriceResponseDTO(price)).thenReturn(priceResponseDTO);
 
 		final ResponseEntity<PriceResponseDTO> response = this.priceController.getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID);
@@ -56,7 +56,7 @@ class PriceControllerTest {
 		assertEquals(OK, response.getStatusCode());
 		assertEquals(priceResponseDTO, response.getBody());
 
-		verify(this.priceServicePort).getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID);
+		verify(this.getPriceUseCase).getPrice(APPLICATION_DATE, PRODUCT_ID, BRAND_ID);
 		verify(this.mapper).priceToPriceResponseDTO(price);
 	}
 
